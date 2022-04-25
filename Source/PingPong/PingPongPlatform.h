@@ -31,6 +31,9 @@ class PINGPONG_API APingPongPlatform : public AActor
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_MoveRight(float AxisValue);
+	
+	void OnBodyMeshLoaded();	
+	
 };
 
 

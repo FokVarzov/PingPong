@@ -34,10 +34,36 @@ void APingPongBall::BeginPlay()
 	
 	BodyMesh->SetStaticMesh(LoadBodyMesh());
 	BodyMesh->SetMaterial(0, LoadBodyMaterial());
-	HitEffect = LoadObject<UParticleSystem>(NULL,
-		TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"), NULL,	LOAD_None, NULL);
-	
+	//HitEffect = LoadObject<UParticleSystem>(NULL, TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"), NULL,	LOAD_None, NULL);
+	LoadHitEffect();
 }
+
+void APingPongBall::LoadHitEffect()
+{
+	FStreamableDelegate LoadEffectDelegate;
+
+	LoadEffectDelegate.BindUObject(this, &APingPongBall::OnHitEffectLoaded);
+
+	UAssetManager& assetManager = UAssetManager::Get();
+
+	FStreamableManager& streamableManager =	assetManager.GetStreamableManager();
+
+	AssetHandle = streamableManager.RequestAsyncLoad(HitEffectRef.ToStringReference(),LoadEffectDelegate);
+}
+
+void APingPongBall::OnHitEffectLoaded()
+{
+	GEngine->AddOnScreenDebugMessage(10, 3,FColor::Red, "Load Effect");
+
+	UParticleSystem * loadedEffect=  Cast<UParticleSystem>(AssetHandle.Get()->GetLoadedAsset());
+
+	if(loadedEffect)   
+	{
+		HitEffect = loadedEffect;
+	}
+
+}
+
 UStaticMesh* APingPongBall::LoadBodyMesh()
 {
 	if (BodyMeshRef.IsPending())
