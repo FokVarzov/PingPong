@@ -23,8 +23,15 @@ class PINGPONG_API APingPongBall : public AActor
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ball params")
 	float MoveSpeed = 100;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ball params")
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ball params")
 	UParticleSystem* HitEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSoftObjectPtr<UStaticMesh> BodyMeshRef;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSoftObjectPtr<UMaterialInterface> BodyMeshMaterialRef;
 	
 	UPROPERTY(Replicated)
 	
@@ -44,6 +51,10 @@ class PINGPONG_API APingPongBall : public AActor
 	void Server_StopMove();
 	UFUNCTION(NetMulticast, Unreliable)
 	void Multicast_HitEffect();
+
+	UStaticMesh* LoadBodyMesh();
+
+	UMaterialInterface* LoadBodyMaterial();
 	
 	public:
 	virtual void Tick(float DeltaTime) override;
