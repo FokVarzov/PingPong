@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
+#include "Engine/StreamableManager.h"
 #include "PingPongBall.generated.h"
 
 
@@ -26,6 +27,11 @@ class PINGPONG_API APingPongBall : public AActor
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ball params")
 	UParticleSystem* HitEffect;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSoftObjectPtr<UParticleSystem> HitEffectRef;
+
+	TSharedPtr<FStreamableHandle> AssetHandle;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSoftObjectPtr<UStaticMesh> BodyMeshRef;
@@ -55,6 +61,9 @@ class PINGPONG_API APingPongBall : public AActor
 	UStaticMesh* LoadBodyMesh();
 
 	UMaterialInterface* LoadBodyMaterial();
+
+	void LoadHitEffect();
+	void OnHitEffectLoaded();
 	
 	public:
 	virtual void Tick(float DeltaTime) override;
